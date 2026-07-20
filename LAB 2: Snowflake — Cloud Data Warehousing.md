@@ -1,43 +1,43 @@
 # LAB 2: Snowflake — Cloud Data Warehousing
 
-## Overview
+## 📖 Overview
 
 In this lab, you will provision a Snowflake trial account, load data using `COPY INTO`, query the data, and implement clustering to improve query performance.
 
-## Objective
+## 🎯 Objective
 
 Provision a Snowflake trial, load data via `COPY INTO`, query it, and implement clustering for performance.
 
-## Key Concepts
+## 📚 Key Concepts
 
-| Concept               | Description                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| **Virtual Warehouse** | Compute cluster (XS–4XL) that runs SQL queries; auto-suspends when idle.                    |
-| **Stage**             | Named location (internal or Amazon S3/Azure Blob Storage) from which Snowflake loads files. |
-| **Clustering Keys**   | Columns Snowflake uses to micro-partition data for faster range queries.                    |
+| Concept               | Description                                                                                          |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Virtual Warehouse** | Compute cluster (XS–4XL) that executes SQL queries and automatically suspends when idle.             |
+| **Stage**             | Named storage location (internal or Amazon S3/Azure Blob Storage) used to load files into Snowflake. |
+| **Clustering Keys**   | Columns Snowflake uses to micro-partition data, improving the performance of range-based queries.    |
 
-## Lab Steps
+## 🛠️ Lab Steps
 
-1. Sign up at **app.snowflake.com** → select the region closest to your data.
-2. Create a database, schema, warehouse, and table.
-3. Create an internal stage, upload the CSV file, and run `COPY INTO`.
-4. Query the data with aggregations and analyze the query profile.
-5. Add a clustering key and run `SYSTEM$CLUSTERING_INFORMATION`.
+1. Sign up at **app.snowflake.com** and select the region closest to your data.
+2. Create a **database**, **schema**, **warehouse**, and **table**.
+3. Create an internal stage, upload the CSV file, and execute the `COPY INTO` command.
+4. Query the data using aggregations and analyze the query profile.
+5. Add a clustering key and execute `SYSTEM$CLUSTERING_INFORMATION`.
 6. Create a **SECURE VIEW** for role-based access.
 
-## Code Reference
+## 💻 Code Reference
 
 ### Setup & Load
 
-```sql
+```sql id="j9skqe"
 -- Setup
 CREATE DATABASE SALES_DB;
 
 CREATE SCHEMA SALES_DB.PUBLIC;
 
 CREATE WAREHOUSE COMPUTE_WH
-WITH WAREHOUSE_SIZE='X-SMALL'
-AUTO_SUSPEND=60;
+WITH WAREHOUSE_SIZE = 'X-SMALL'
+AUTO_SUSPEND = 60;
 
 CREATE TABLE orders (
     order_id INT,
@@ -61,7 +61,7 @@ FILE_FORMAT = (
 
 ### Query & Cluster
 
-```sql
+```sql id="wjy1wr"
 -- Aggregation
 SELECT
     DATE_TRUNC('month', order_date) AS month,
@@ -77,5 +77,5 @@ CLUSTER BY (order_date);
 SELECT SYSTEM$CLUSTERING_INFORMATION('orders', '(order_date)');
 ```
 
-> [!NOTE]
-> Auto-suspend and auto-resume ensure that compute resources are billed only while they are actively running.
+> 📝 **Note**
+> Auto-suspend and auto-resume ensure that you pay for compute resources only while they are actively running.
